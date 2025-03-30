@@ -18,9 +18,12 @@
             "cubos::engine::BoxCollisionShape": {
                 "x": 3.0,
                 "y": 7.0,
-                "z": 2.0
+                "z":
+                2.0
             },
             "cubos::engine::Collider": {},
+            "cubos::engine::CollisionLayers": 1,
+            "cubos::engine::CollisionMask": 1,
             "Obstacle": {
                 "velocity": {
                     "x": 0,

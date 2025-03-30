@@ -13,6 +13,7 @@
 #include "obstacle.hpp"
 #include "player.hpp"
 #include "spawner.hpp"
+#include "gameTime.hpp"
 
 using namespace cubos::engine;
 
@@ -30,11 +31,14 @@ int main(int argc, char** argv)
     cubos.plugin(spawnerPlugin);
     cubos.plugin(obstaclePlugin);
     cubos.plugin(playerPlugin);
+    cubos.plugin(gameTimePlugin);
 
     cubos.startupSystem("configure settings").before(settingsTag).call([](Settings& settings) {
         settings.setString("assets.app.osPath", APP_ASSETS_PATH);
         settings.setString("assets.builtin.osPath", BUILTIN_ASSETS_PATH);
     });
+
+
 
     cubos.startupSystem("set the palette, environment, input bindings and spawn the scene")
         .tagged(assetsTag)
@@ -61,12 +65,31 @@ int main(int argc, char** argv)
             }
         });
 
-    cubos.system("detect player vs obstacle collisions")
-        .call([](Query<const Player&, const CollidingWith&, const Obstacle&> collisions) {
+    cubos.system("Restart on player collision")
+        .call([](Commands cmds, const Assets& assets, Query<const Player&, const CollidingWith&, const Obstacle&> collisions, Query<Entity> all) {
             for (auto [player, collidingWith, obstacle] : collisions)
             {
                 CUBOS_INFO("Player collided with an obstacle!");
-                (void)player; // here to shut up 'unused variable warning', you can remove it
+                (void) player;
+
+                for (auto [ent] : all)
+                {
+                    cmds.destroy(ent);
+                }
+
+                cmds.spawn(assets.read(SceneAsset)->blueprint);
+                break;
+            }
+        });
+
+    cubos.system("Gradually speedup game")
+        .with<Player>()
+        .call([](Query<Player&> players) {
+            for (auto player : players) {
+                //player.first.speed += 00000.1;
+
+                (void) player;
+
             }
         });
 

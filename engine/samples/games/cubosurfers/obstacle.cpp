@@ -38,4 +38,6 @@ void obstaclePlugin(Cubos& cubos)
                 }
             }
         });
+
+
 }
