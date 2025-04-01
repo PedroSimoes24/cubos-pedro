@@ -83,13 +83,11 @@ int main(int argc, char** argv)
         });
 
     cubos.system("Gradually speedup game")
-        .with<Player>()
-        .call([](Query<Player&> players) {
-            for (auto player : players) {
-                //player.first.speed += 00000.1;
+        .call([](Query<Obstacle&> obstacles, const GameTime& gt) {
 
-                (void) player;
+            for (auto [o] : obstacles) {
 
+                o.velocity.z -= 1.0F * gt.elapsedTime;
             }
         });
 
