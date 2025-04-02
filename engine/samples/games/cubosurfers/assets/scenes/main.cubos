@@ -76,6 +76,19 @@
                 "laneWidth": 9
             }
         },
+        "powerup-spawner": {
+            "cubos::engine::Position": {
+                "x": 0,
+                "y": 0,
+                "z": 300
+            },
+            "Spawner": {
+                "scene": "3084c189-640a-4795-a8a0-b84329999e57",
+                "sceneRoot": "base",
+                "period": 3.0,
+                "laneWidth": 9
+            }
+        },
         "sun": {
             "cubos::engine::DirectionalLight": {
                 "color": {

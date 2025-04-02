@@ -11,6 +11,7 @@
 #include <cubos/engine/voxels/plugin.hpp>
 
 #include "obstacle.hpp"
+#include "armour.hpp"
 #include "player.hpp"
 #include "spawner.hpp"
 #include "gameTime.hpp"
@@ -30,6 +31,7 @@ int main(int argc, char** argv)
     cubos.plugin(toolsPlugin);
     cubos.plugin(spawnerPlugin);
     cubos.plugin(obstaclePlugin);
+    cubos.plugin(armourPlugin);
     cubos.plugin(playerPlugin);
     cubos.plugin(gameTimePlugin);
 
@@ -37,8 +39,6 @@ int main(int argc, char** argv)
         settings.setString("assets.app.osPath", APP_ASSETS_PATH);
         settings.setString("assets.builtin.osPath", BUILTIN_ASSETS_PATH);
     });
-
-
 
     cubos.startupSystem("set the palette, environment, input bindings and spawn the scene")
         .tagged(assetsTag)
@@ -53,7 +53,7 @@ int main(int argc, char** argv)
         });
 
     cubos.system("restart the game on input")
-        .call([](Commands cmds, const Assets& assets, const Input& input, Query<Entity> all) {
+        .call([](Commands cmds, const Assets& assets, const Input& input, Query<Entity> all, GameTime& gt) {
             if (input.justPressed("restart"))
             {
                 for (auto [ent] : all)
@@ -62,15 +62,21 @@ int main(int argc, char** argv)
                 }
 
                 cmds.spawn(assets.read(SceneAsset)->blueprint);
+                gt.elapsedTime = 0.0F;
             }
         });
 
     cubos.system("Restart on player collision")
-        .call([](Commands cmds, const Assets& assets, Query<const Player&, const CollidingWith&, const Obstacle&> collisions, Query<Entity> all) {
+        .call([](Commands cmds, const Assets& assets, Query<Player&, const CollidingWith&, Obstacle&> collisions, Query<Entity> all, GameTime& gt) {
             for (auto [player, collidingWith, obstacle] : collisions)
             {
-                CUBOS_INFO("Player collided with an obstacle!");
-                (void) player;
+                CUBOS_INFO("Player collided with an obstacle. Armored: {}", player.armored);
+
+                if (player.armored) {
+                    obstacle.velocity.z = -10000; // xDDDDDD
+                    player.armored = false;
+                    break;
+                }
 
                 for (auto [ent] : all)
                 {
@@ -78,7 +84,19 @@ int main(int argc, char** argv)
                 }
 
                 cmds.spawn(assets.read(SceneAsset)->blueprint);
+                gt.elapsedTime = 0.0F;
                 break;
+            }
+        });
+
+    cubos.system("Check for armor pickup")
+        .call([](Query<Player&, const CollidingWith&, const Armour&> collisions) {
+
+            for (auto [player, collidingWith, armour] : collisions)
+            {
+                CUBOS_INFO("Armored picked up");
+                player.armored = true;
+                CUBOS_INFO("Armored = {}", player.armored);
             }
         });
 
@@ -87,7 +105,7 @@ int main(int argc, char** argv)
 
             for (auto [o] : obstacles) {
 
-                o.velocity.z -= 1.0F * gt.elapsedTime;
+                o.velocity.z =  -(5.0F * gt.elapsedTime) - 80;
             }
         });
 
