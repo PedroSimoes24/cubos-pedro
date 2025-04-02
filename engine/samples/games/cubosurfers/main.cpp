@@ -15,6 +15,8 @@
 #include "player.hpp"
 #include "spawner.hpp"
 #include "gameTime.hpp"
+#include "jetpack.hpp"
+
 
 using namespace cubos::engine;
 
@@ -32,6 +34,7 @@ int main(int argc, char** argv)
     cubos.plugin(spawnerPlugin);
     cubos.plugin(obstaclePlugin);
     cubos.plugin(armourPlugin);
+    cubos.plugin(jetpackPlugin);
     cubos.plugin(playerPlugin);
     cubos.plugin(gameTimePlugin);
 
@@ -97,6 +100,33 @@ int main(int argc, char** argv)
                 CUBOS_INFO("Armored picked up");
                 player.armored = true;
                 CUBOS_INFO("Armored = {}", player.armored);
+            }
+        });
+
+    cubos.system("Check for jetpack pickup")
+        .call([](Query<Player&, const CollidingWith&, const Jetpack&> collisions) {
+
+            for (auto [player, collidingWith, jetpack] : collisions)
+            {
+                CUBOS_INFO("Jetpack picked up");
+                player.jetpacked = true;
+                player.jetpackTimer = 15.0F;
+                CUBOS_INFO("Jetpacked = {}", player.jetpacked);
+            }
+        });
+
+    cubos.system("Subtract jetpack timer")
+        .call([](Query<Player&> players, const DeltaTime& dt) {
+
+            for (auto [player] : players)
+            {
+                // Diminui o tempo do jetpack
+                if (player.jetpacked && player.jetpackTimer > 0.0F) {
+                    player.jetpackTimer -= dt.value();
+                } else if (player.jetpacked) {
+                    player.jetpacked = false;
+                }
+
             }
         });
 

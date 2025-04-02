@@ -43,17 +43,19 @@ void playerPlugin(Cubos& cubos)
                 float currentT = (position.vec.x - sourceX) / (targetX - sourceX);
                 float newT = glm::min(1.0F, currentT + dt.value() * player.speed);
                 position.vec.x = glm::mix(sourceX, targetX, newT);
-                position.vec.y = glm::sin(currentT * glm::pi<float>()) * 2.0F;
+                position.vec.y = !player.jetpacked ?
+                    glm::sin(currentT * glm::pi<float>()) * 2.0F : 15;
 
                 if (newT == 1.0F)
                 {
                     player.lane = player.targetLane;
                 }
             }
-            else
-            {
-                position.vec.y = 0;
-            }
+
+
+            float targetY = player.jetpacked ? 15.0F : 0.0F;
+            position.vec.y = glm::mix(position.vec.y, targetY, dt.value() * player.speed);
+
         }
     });
 }

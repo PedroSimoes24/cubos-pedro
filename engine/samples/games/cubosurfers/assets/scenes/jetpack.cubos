@@ -2,11 +2,11 @@
     "entities": {
         "base": {
             "cubos::engine::RenderVoxelGrid": {
-                "asset": "fd89da0f-72d2-4ef9-9297-f73ff2ca5c63",
+                "asset": "732498a6-7675-4efa-86ef-8f35d3bec485",
                 "offset": {
-                    "x": -3,
+                    "x": -2,
                     "y": 0,
-                    "z": -3
+                    "z": -2
                 }
             },
             "cubos::engine::Rotation": {
@@ -24,7 +24,7 @@
             "cubos::engine::Collider": {},
             "cubos::engine::CollisionLayers": 1,
             "cubos::engine::CollisionMask": 1,
-            "Armour": {
+            "Jetpack": {
                 "velocity": {
                     "x": 0,
                     "y": 0,

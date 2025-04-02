@@ -76,7 +76,7 @@
                 "laneWidth": 9
             }
         },
-        "powerup-spawner": {
+        "armor-spawner": {
             "cubos::engine::Position": {
                 "x": 0,
                 "y": 0,
@@ -86,6 +86,19 @@
                 "scene": "3084c189-640a-4795-a8a0-b84329999e57",
                 "sceneRoot": "base",
                 "period": 3.0,
+                "laneWidth": 9
+            }
+        },
+        "jetpack-spawner": {
+            "cubos::engine::Position": {
+                "x": 0,
+                "y": 0,
+                "z": 300
+            },
+            "Spawner": {
+                "scene": "fdfa8315-cec8-4fc5-befb-b1fcbf4fcc29",
+                "sceneRoot": "base",
+                "period": 10.0,
                 "laneWidth": 9
             }
         },

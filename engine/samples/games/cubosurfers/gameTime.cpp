@@ -21,6 +21,7 @@ void gameTimePlugin(cubos::engine::Cubos& cubos) {
 
     cubos.system("update time").call([](GameTime& gt, const DeltaTime& dt) {
 
+
         CUBOS_INFO("Updating elapsed time: {}", gt.elapsedTime );
         gt.elapsedTime += dt.value();
 
